@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 006_drop_not_null_constraint_balance_bank_account_table
+      author: Abdul Salikhov
+      changes:
+        - dropNotNullConstraint:
+            tableName: bank_account
+            columnName: balance
+            columnDataType: DECIMAL(19,4)

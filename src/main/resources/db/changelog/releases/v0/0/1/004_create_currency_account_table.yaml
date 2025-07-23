@@ -1,0 +1,67 @@
+databaseChangeLog:
+  - changeSet:
+      id: 004_create_currency_account_table
+      author: Abdul Salikhov
+      changes:
+
+        # ────────── сама таблица ──────────
+        - createTable:
+            tableName: currency_account
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: currency_type          # Enum сохраняем как строку
+                  type: VARCHAR(16)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: balance
+                  type: DECIMAL(19,4)
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: bank_account_id        # FK на «кошелёк» клиента
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+              - column:
+                  name: version
+                  type: int
+
+        # ────────── внешние ключи / индексы ──────────
+        - addForeignKeyConstraint:
+            baseTableName: currency_account
+            baseColumnNames: bank_account_id
+            referencedTableName: bank_account
+            referencedColumnNames: id
+            onDelete: CASCADE
+            constraintName: fk_currency_account_bank
+
+        - createIndex:
+            tableName: currency_account
+            indexName: ix_currency_account_bank
+            columns:
+              - column:
+                  name: bank_account_id
+

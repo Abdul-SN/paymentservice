@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: 009_drop_not_null_constraint_payment_transaction_table
+      author: Abdul Salikhov
+      changes:
+        - dropNotNullConstraint:
+            tableName: payment_transaction
+            columnName: currency
+            columnDataType: VARCHAR(3)
+        - dropNotNullConstraint:
+            tableName: payment_transaction
+            columnName: amount
+            columnDataType: DECIMAL(19,4)

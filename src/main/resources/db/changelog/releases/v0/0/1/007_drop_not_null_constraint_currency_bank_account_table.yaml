@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 006_drop_not_null_constraint_currency_bank_account_table
+      author: Abdul Salikhov
+      changes:
+        - dropNotNullConstraint:
+            tableName: bank_account
+            columnName: currency
+            columnDataType: VARCHAR(3)

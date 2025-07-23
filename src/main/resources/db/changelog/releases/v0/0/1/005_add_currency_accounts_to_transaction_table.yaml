@@ -1,0 +1,51 @@
+databaseChangeLog:
+  - changeSet:
+      id: 005_add_currency_accounts_to_transaction_table
+      author: Abdul Salikhov
+      changes:
+        - addColumn:
+            tableName: payment_transaction
+            columns:
+              - column:
+                  name: source_currency_account_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false        # платёж всегда списывается из одного кармана
+              - column:
+                  name: destination_currency_account_id
+                  type: BIGINT
+                  constraints:
+                    nullable: true         # может быть null для операций «снятие/пополнение»
+
+        # ────────── внешние ключи ──────────
+        - addForeignKeyConstraint:
+            constraintName: fk_tx_src_currency_account
+            baseTableName: payment_transaction
+            baseColumnNames: source_currency_account_id
+            referencedTableName: currency_account
+            referencedColumnNames: id
+            onDelete: RESTRICT
+
+        - addForeignKeyConstraint:
+            constraintName: fk_tx_dst_currency_account
+            baseTableName: payment_transaction
+            baseColumnNames: destination_currency_account_id
+            referencedTableName: currency_account
+            referencedColumnNames: id
+            onDelete: RESTRICT
+
+        # ────────── индексы для быстрого поиска ──────────
+        - createIndex:
+            indexName: ix_tx_src_currency_account
+            tableName: payment_transaction
+            columns:
+              - column:
+                  name: source_currency_account_id
+
+        - createIndex:
+            indexName: ix_tx_dst_currency_account
+            tableName: payment_transaction
+            columns:
+              - column:
+                  name: destination_currency_account_id
+

@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: 008_add_amount_to_transaction_table
+      author: Abdul Salikhov
+      changes:
+        - addColumn:
+            tableName: payment_transaction
+            columns:
+              - column:
+                    name: exchange_rate
+                    type: DECIMAL(19,4)
+                    constraints:
+                      nullable: true
+              - column:
+                  name: amount_debited
+                  type: DECIMAL(19,4)
+                  constraints:
+                    nullable: false       # платёж всегда списывается из одного кармана
+              - column:
+                  name: amount_credited
+                  type: DECIMAL(19,4)
+                  constraints:
+                    nullable: true       # может быть null для операций «снятие/пополнение»
