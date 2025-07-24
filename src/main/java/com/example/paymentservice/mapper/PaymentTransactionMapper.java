@@ -1,8 +1,6 @@
 package com.example.paymentservice.mapper;
 
 import com.example.paymentservice.controller.dto.TransactionDto;
-import com.example.paymentservice.controller.dto.kafka.CreatePaymentTransactionResponse;
-import com.example.paymentservice.controller.dto.enums.CommandResultStatus;
 import com.example.paymentservice.model.entity.PaymentTransaction;
 import com.example.paymentservice.model.entity.account.CurrencyAccount;
 import com.example.paymentservice.model.enums.PaymentTransactionStatus;
@@ -18,9 +16,6 @@ import java.time.ZoneOffset;
 @Mapper(componentModel = "spring")
 public interface PaymentTransactionMapper {
 
-    @Mapping(source = "status", target = "status", qualifiedByName = "mapPaymentTransactionStatusToCommandResultStatus")
-    @Mapping(source = "createdAt", target = "executedAt")
-    CreatePaymentTransactionResponse toKafkaDto(PaymentTransaction paymentTransaction);
 
     @Mapping(source = "createdAt", target = "executedAt", qualifiedByName = "mapLocalDateTimeToOffsetDateTime")
     @Mapping(source = "source.id", target = "sourceCurrencyAccountId")
@@ -32,16 +27,6 @@ public interface PaymentTransactionMapper {
         return (localDateTime == null) ? null : localDateTime.atOffset(ZoneOffset.UTC);
     }
 
-    @Named("mapPaymentTransactionStatusToCommandResultStatus")
-    default CommandResultStatus mapPaymentTransactionStatusToCommandStatus(PaymentTransactionStatus paymentTransactionStatus) {
-        if (paymentTransactionStatus == null) {
-            return CommandResultStatus.FAILED;
-        }
-        return switch (paymentTransactionStatus) {
-            case SUCCESS -> CommandResultStatus.SUCCESS;
-            case FAILED, PROCESSING -> CommandResultStatus.FAILED;
-        };
-    }
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "status", constant = "SUCCESS")

@@ -1,7 +1,6 @@
 package com.example.paymentservice.service.refund;
 
 import com.example.paymentservice.controller.dto.kafka.CancelPaymentRequest;
-import com.example.paymentservice.controller.dto.kafka.CancelPaymentResponse;
 import com.example.paymentservice.mapper.RefundMapper;
 import com.example.paymentservice.model.entity.Refund;
 import com.example.paymentservice.model.enums.RefundStatus;
@@ -20,11 +19,6 @@ public class RefundService {
     private final RefundPolicy refundPolicy;
     private final RefundMapper refundMapper;
 
-    @Transactional
-    public CancelPaymentResponse cancelPayment(CancelPaymentRequest request) {
-        var refund = createRefund(request);
-        return refundMapper.toResponse(refund);
-    }
 
     @Transactional
     public Refund createRefund(CancelPaymentRequest request) {
