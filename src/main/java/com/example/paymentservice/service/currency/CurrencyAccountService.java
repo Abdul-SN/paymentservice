@@ -5,6 +5,7 @@ import com.example.paymentservice.controller.dto.CurrencyAccountDto;
 import com.example.paymentservice.mapper.CurrencyAccountMapper;
 import com.example.paymentservice.model.entity.account.BankAccount;
 import com.example.paymentservice.model.entity.account.CurrencyAccount;
+import com.example.paymentservice.repository.BankAccountRepository;
 import com.example.paymentservice.repository.CurrencyAccountRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 public class CurrencyAccountService {
     private final CurrencyAccountRepository currencyAccountRepository;
     private final CurrencyAccountMapper currencyAccountMapper;
+    private final BankAccountRepository bankAccountRepository;
 
     @Transactional
     public List<CurrencyAccountDto> getUserAccounts(Long accountId) {
@@ -79,5 +81,16 @@ public class CurrencyAccountService {
             account.setBankAccount(bankAccount);
         }
         return currencyAccountRepository.saveAll(accounts);
+    }
+
+    @Transactional
+    public CurrencyAccountDto createAccount(Long bankAccountId, CurrencyAccountCreate create) {
+        BankAccount bankAccount = bankAccountRepository.findById(bankAccountId)
+                .orElseThrow(() -> new EntityNotFoundException("Bank account not found: " + bankAccountId));
+
+        CurrencyAccount entity = currencyAccountMapper.toEntity(create);
+        entity.setBankAccount(bankAccount);
+        CurrencyAccount saved = currencyAccountRepository.save(entity);
+        return currencyAccountMapper.toDto(saved);
     }
 }

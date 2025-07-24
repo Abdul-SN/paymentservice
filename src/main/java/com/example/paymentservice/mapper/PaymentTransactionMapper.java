@@ -1,5 +1,6 @@
 package com.example.paymentservice.mapper;
 
+import com.example.paymentservice.controller.dto.TransactionDto;
 import com.example.paymentservice.controller.dto.kafka.CreatePaymentTransactionResponse;
 import com.example.paymentservice.controller.dto.enums.CommandResultStatus;
 import com.example.paymentservice.model.entity.PaymentTransaction;
@@ -20,6 +21,11 @@ public interface PaymentTransactionMapper {
     @Mapping(source = "status", target = "status", qualifiedByName = "mapPaymentTransactionStatusToCommandResultStatus")
     @Mapping(source = "createdAt", target = "executedAt")
     CreatePaymentTransactionResponse toKafkaDto(PaymentTransaction paymentTransaction);
+
+    @Mapping(source = "createdAt", target = "executedAt", qualifiedByName = "mapLocalDateTimeToOffsetDateTime")
+    @Mapping(source = "source.id", target = "sourceCurrencyAccountId")
+    @Mapping(source = "destination.id", target = "destinationCurrencyAccountId")
+    TransactionDto toDto(PaymentTransaction paymentTransaction);
 
     @Named("mapLocalDateTimeToOffsetDateTime")
     default OffsetDateTime mapLocalDateTimeToOffsetDateTime(LocalDateTime localDateTime) {

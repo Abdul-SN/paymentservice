@@ -3,6 +3,7 @@ package com.example.paymentservice.service.refund;
 import com.example.paymentservice.controller.dto.kafka.CancelPaymentRequest;
 import com.example.paymentservice.controller.dto.kafka.CancelPaymentResponse;
 import com.example.paymentservice.mapper.RefundMapper;
+import com.example.paymentservice.model.entity.Refund;
 import com.example.paymentservice.model.enums.RefundStatus;
 import com.example.paymentservice.repository.RefundRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,14 +22,23 @@ public class RefundService {
 
     @Transactional
     public CancelPaymentResponse cancelPayment(CancelPaymentRequest request) {
+        var refund = createRefund(request);
+        return refundMapper.toResponse(refund);
+    }
+
+    @Transactional
+    public Refund createRefund(CancelPaymentRequest request) {
         var transaction = refundPolicy.checkAndFetchTransaction(request.getTransactionId());
         var remainingAmount = refundPolicy.calculateRemainingRefundable(transaction, request.getRefundedAmount());
 
         refundCalculator.applyRefund(transaction, remainingAmount);
         var refund = refundMapper.toEntity(request, RefundStatus.COMPLETED);
         refund.setPaymentTransaction(transaction);
-        var savedRefund = refundRepository.save(refund);
+        return refundRepository.save(refund);
+    }
 
-        return refundMapper.toResponse(savedRefund);
+    @Transactional(readOnly = true)
+    public java.util.List<Refund> getRefundsForTransaction(Long transactionId) {
+        return refundRepository.findAllByPaymentTransactionId(transactionId);
     }
 }
