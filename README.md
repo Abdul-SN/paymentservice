@@ -18,7 +18,7 @@ After the containers are up, register the connector:
 
 ```bash
 curl -X POST -H "Content-Type: application/json" \
-     --data @debezium/payment-connector.json \
+     --data-binary @src/main/resources/debezium/payment-connector.json \
      http://localhost:8083/connectors
 ```
 
