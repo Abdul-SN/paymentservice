@@ -30,8 +30,8 @@ public class PaymentTransactionProducer {
         return MessageBuilder
                 .withPayload(payload)
                 .setHeader(KafkaHeaders.TOPIC, TOPIC)
-                .setHeader(KafkaHeaders.KEY, requestId)
-                .setHeader("commandType", commandType)
+                .setHeader(KafkaHeaders.KEY, requestId.toString())
+                .setHeader("commandType", commandType.name())
                 .build();
     }
 
