@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
- * Обрабатывает команды на возврат платежа
+ * Обрабатывает команды на создание платежа
  */
 @Slf4j
 @Component
