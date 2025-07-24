@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: 010_drop_not_null_constraint_bank_accounts_payment_transaction_table
+      author: Abdul Salikhov
+      changes:
+        - dropNotNullConstraint:
+            tableName: payment_transaction
+            columnName: source_bank_account_id
+            columnDataType: BIGINT
+        - dropNotNullConstraint:
+            tableName: payment_transaction
+            columnName: destination_bank_account_id
+            columnDataType: BIGINT
