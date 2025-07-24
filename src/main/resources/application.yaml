@@ -33,3 +33,9 @@ currencyfreaks:
   api:
     key: 465eadc1dd6e401fbaff4711b73892f8           # забирается из env
     url: https://api.currencyfreaks.com/v2.0/rates/    # базовый URL
+
+sampledata:
+  enabled: false
+  accounts: 3
+  transactions: 10
+
